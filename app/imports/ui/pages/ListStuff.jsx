@@ -14,6 +14,28 @@ class ListStuff extends React.Component {
     return (this.props.ready) ? this.renderPage() : <Loader>Getting data</Loader>;
   }
 
+  constructor(props) {
+    super(props);
+    this.delete = this.delete.bind(this);
+    this.insertCallback = this.insertCallback.bind(this);
+    this.formRef = null;
+  }
+
+  /** Notify the user of the results of the submit. If successful, clear the form. */
+  insertCallback(error) {
+    if (error) {
+      Bert.alert({ type: 'danger', message: `Add failed: ${error.message}` });
+    } else {
+      Bert.alert({ type: 'success', message: 'Add succeeded' });
+      this.formRef.reset();
+    }
+  }
+
+  /** On submit, insert the data. */
+  delete(data) {
+    Stuffs.remove({ name, quantity, condition, owner }, this.insertCallback);
+  }
+
   /** Render the page once subscriptions have been received. */
   renderPage() {
     return (
@@ -26,6 +48,7 @@ class ListStuff extends React.Component {
                 <Table.HeaderCell>Quantity</Table.HeaderCell>
                 <Table.HeaderCell>Condition</Table.HeaderCell>
                 <Table.HeaderCell>Edit</Table.HeaderCell>
+                <SubmitField value='Delete'/>
               </Table.Row>
             </Table.Header>
             <Table.Body>

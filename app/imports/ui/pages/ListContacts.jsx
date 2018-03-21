@@ -14,6 +14,28 @@ class ListContacts extends React.Component {
     return (this.props.ready) ? this.renderPage() : <Loader>LGetting Data</Loader>;
   }
 
+  constructor(props) {
+    super(props);
+    this.submit = this.submit.bind(this);
+    this.deleteCallback = this.deleteCallback.bind(this);
+    this.formRef = null;
+  }
+
+  /** Notify the user of the results of the submit. If successful, clear the form. */
+  deleteCallback(error) {
+    if (error) {
+      Bert.alert({ type: 'danger', message: `Delete failed: ${error.message}` });
+    } else {
+      Bert.alert({ type: 'success', message: 'Delete succeeded' });
+      this.formRef.reset();
+    }
+  }
+
+  /** On submit, insert the data. */
+  onClick(){
+    
+  }
+
   /** Render the page once subscriptions have been received. */
   renderPage() {
     return (
@@ -22,6 +44,9 @@ class ListContacts extends React.Component {
           <Card.Group>
             {this.props.contacts.map((contact, index) => <Contact key={index} contact={contact} />)}
           </Card.Group>
+          <Card.Content extra>
+            <SubmitField value='Delete'/>
+          </Card.Content>
         </Container>
     );
   }
